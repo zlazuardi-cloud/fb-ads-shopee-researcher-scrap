@@ -31,20 +31,23 @@ scroll_count = st.sidebar.slider("Jumlah Scroll (Makin banyak = makin banyak ikl
 # ==========================================
 # 3. FUNGSI UTAMA SCRAPING (MENGGUNAKAN SELENIUM)
 # ==========================================
+# --- UPDATE KODE BAGIAN KONFIGURASI DRIVER DI APP.PY ---
 def scrape_fb_ads(keyword, target_country, total_scroll):
     # Konfigurasi agar Chrome berjalan mulus di server Linux Streamlit Cloud (Headless mode)
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new") # Menggunakan headless mode versi baru
+    chrome_options.add_argument("--headless=new") 
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     
-    # Langsung memanggil biner chromium-chromedriver yang diinstal lewat packages.txt
+    # Tambahan perintah khusus untuk Linux Debian agar jalurnya tidak bentrok
+    chrome_options.binary_location = "/usr/bin/chromium"
+    
+    # Jalankan webdriver secara langsung mengarah ke sistem Linux
     driver = webdriver.Chrome(options=chrome_options)
     
     # Susun URL target FB Ads Library berdasarkan kata kunci
     fb_url = f"https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country={target_country}&q={keyword}&sort_data[direction]=desc&sort_data[mode]=relevancy_id&media_type=all"
-    
     driver.get(fb_url)
     time.sleep(5) # Tunggu halaman loading awal sempurna
     
